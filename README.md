@@ -143,7 +143,8 @@ This folder contains runnable experiment scripts and notebooks used for the SAO 
 - Data Reader & pkl conversion -" SAO-Parsing_Data-Exampleipynb"
 - Debugging sections - SAO-Parsing_Dataipynb {Use the data description file for better understanding}
 - Staion_pkl-Correction.ipynb - Where two files of diff period of data of same station is combined
--SW22_48-NOA-Matching.ipynb - Spatial & Temporal Coincidences of the Demeter ANomalies & Ionosonde soundings
+- SW22_48-NOA-Matching.ipynb - Spatial & Temporal Coincidences of the Demeter ANomalies & Ionosonde soundings
+- NOA-Digisonde_Background-PLOT.ipynb - Background nature of each ionosonde stations
 
 
 

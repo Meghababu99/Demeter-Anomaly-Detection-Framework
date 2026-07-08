@@ -1,0 +1,11 @@
+numpy
+pandas
+matplotlib
+scipy
+scikit-learn
+torch
+shapely
+seaborn
+plotly
+geopandas
+math
