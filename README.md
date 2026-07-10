@@ -470,6 +470,9 @@ RESULT_DIR = DEMETER_ROOT / "Result Files"
 PhD Researcher
 Research topic: data-driven deep-learning analysis of ionospheric electric-field perturbations and seismic association.
 
+Data Science for Industry and Physics - Bruno Kessler Foundation, Italy
+Department of Physics - University of Trento, Italy
+
 ## Reference 
 The DEMETER data has to be cited as per the Source website : https://cdpp-archive.cnes.fr/
 
