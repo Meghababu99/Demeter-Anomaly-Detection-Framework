@@ -469,3 +469,6 @@ RESULT_DIR = DEMETER_ROOT / "Result Files"
 **Megha Babu**  
 PhD Researcher
 Research topic: data-driven deep-learning analysis of ionospheric electric-field perturbations and seismic association.
+
+## Reference 
+The DEMETER data has to be cited as per the Source website : https://cdpp-archive.cnes.fr/
