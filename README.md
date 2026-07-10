@@ -472,3 +472,5 @@ Research topic: data-driven deep-learning analysis of ionospheric electric-field
 
 ## Reference 
 The DEMETER data has to be cited as per the Source website : https://cdpp-archive.cnes.fr/
+
+- JOURNAL PAPER - Babu, M., Cristoforetti, M., Battiston, R., & Iuppa, R. (2026). Data-Driven Deep Learning Model for Detecting Ionospheric Electric Field Perturbations and Seismic Correlation. Remote Sensing, 18(9), 1324. https://doi.org/10.3390/rs18091324
