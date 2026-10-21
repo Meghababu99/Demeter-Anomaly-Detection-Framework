@@ -64,7 +64,7 @@ def train_attention_lstm_ae_mode(
     epochs_no_improve = 0
     best_model_state = None
     os.makedirs(os.path.dirname(os.fspath(best_model_path)) or '.', exist_ok=True)
-
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=50)
     for epoch in range(num_epochs):
         model.train()
         train_loss = 0.0
@@ -81,6 +81,7 @@ def train_attention_lstm_ae_mode(
             optimizer.step()
             train_loss += loss.item()
         train_losses.append(train_loss / len(train_data_loader))
+        scheduler.step()
 
         model.eval()
         val_loss = 0.0
