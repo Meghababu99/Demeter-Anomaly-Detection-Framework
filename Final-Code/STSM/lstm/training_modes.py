@@ -44,7 +44,7 @@ def train_lstm_ae_mode(
     best_val_loss = float('inf')
     epochs_no_improve = 0
     best_model_state = None
-    # scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=50)
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=50)
     for epoch in range(num_epochs):
         model.train()
         train_loss = 0.0
@@ -89,7 +89,7 @@ def train_lstm_ae_mode(
 
         train_losses.append(train_loss / len(train_data_loader))
         train_recon_losses.append(train_recon_loss_epoch / len(train_data_loader))
-        # scheduler.step()
+        scheduler.step()
         if mode == 'autoencoder_classifier':
             train_class_losses.append(train_class_loss_epoch / len(train_data_loader))
 
