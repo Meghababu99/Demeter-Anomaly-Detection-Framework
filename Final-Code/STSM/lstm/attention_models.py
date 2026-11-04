@@ -62,3 +62,96 @@ class TemporalAttentionLSTMAutoencoder(nn.Module):
         if return_attention:
             return decoded, weights                         # [B,T,F], [B,T,1]
         return decoded
+
+
+class FeatureTemporalAttentionLSTMEncoder(nn.Module):
+    """Feature attention before LSTM; temporal pooling after LSTM."""
+
+    def __init__(self, input_size, hidden_size, num_layers, latent_dim):
+        super().__init__()
+
+        # NEW: one feature score per input feature at each timestep.
+        self.feature_attention = nn.Linear(input_size, input_size)
+
+        # Same encoder structure as the temporal-only model.
+        self.lstm = nn.LSTM(
+            input_size,
+            hidden_size,
+            num_layers,
+            batch_first=True,
+        )
+
+        self.temporal_attention = nn.Linear(hidden_size, 1)
+        self.encoder_fc = nn.Linear(hidden_size, latent_dim)
+
+    def forward(self, x, return_attention=False):
+        if (
+            x.ndim != 3
+            or x.size(1) == 0
+            or x.size(2) != self.lstm.input_size
+        ):
+            raise ValueError(
+                "Expected nonempty [batch, time, input_size] input"
+            )
+
+        # Feature attention: normalize over features, independently
+        # for each sample and timestep.
+        feature_scores = self.feature_attention(x)       # [B,T,F]
+        feature_weights = torch.softmax(
+            feature_scores, dim=2
+        )                                                  # [B,T,F]
+
+        weighted_input = x * feature_weights             # [B,T,F]
+
+        outputs, _ = self.lstm(weighted_input)            # [B,T,H]
+
+        # Temporal attention: normalize over timesteps.
+        temporal_scores = self.temporal_attention(outputs)  # [B,T,1]
+        temporal_weights = torch.softmax(
+            temporal_scores, dim=1
+        )                                                  # [B,T,1]
+
+        context = (temporal_weights * outputs).sum(dim=1)  # [B,H]
+        z = self.encoder_fc(context)                       # [B,LD]
+
+        if return_attention:
+            return z, {
+                "feature": feature_weights,
+                "temporal": temporal_weights,
+            }
+
+        return z
+
+
+class FeatureTemporalAttentionLSTMAutoencoder(nn.Module):
+    """Shared AE for paired inputs; original decoder is reused."""
+
+    model_type = "TF_attention"
+
+    def __init__(self, input_size, hidden_size, num_layers, latent_dim):
+        super().__init__()
+
+        self.encoder = FeatureTemporalAttentionLSTMEncoder(
+            input_size,
+            hidden_size,
+            num_layers,
+            latent_dim,
+        )
+
+        self.decoder = LSTMDecoder(
+            hidden_size,
+            input_size,
+            num_layers,
+            latent_dim,
+        )
+
+        self.use_internal_classifier = False
+
+    def forward(self, x, return_attention=False):
+        if return_attention:
+            z, attention = self.encoder(x, return_attention=True)
+            decoded = self.decoder(z, x.size(1))
+            return decoded, attention
+
+        z = self.encoder(x)
+        return self.decoder(z, x.size(1))

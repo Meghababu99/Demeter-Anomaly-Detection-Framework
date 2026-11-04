@@ -22,7 +22,7 @@ def train_attention_lstm_ae_mode(
     num_epochs=450,
     lr=0.001,
     patience=100,
-    best_model_path='best_temporal_attention_model.pth',
+    best_model_path='best_TF_attention_model.pth',#best_temporal_attention_model.pth
     early_stopping=True,
     save_all_epochs=False,
     all_epochs_dir=None,
@@ -35,23 +35,14 @@ def train_attention_lstm_ae_mode(
     num_layers=None,
     batch_size=None,
     seq=None,
-    mode='temporal_attention',
+    mode='TF_attention', #"temporal_attention"
 ):
-    """Each loader batch must be (X_A, X_B), trained on non-seismic pairs.
+   
+    # if mode != 'temporal_attention' or getattr(model, 'model_type', None) != mode:
+    #     raise ValueError('Use TemporalAttentionLSTMAutoencoder and mode="temporal_attention"')
+    if mode != 'TF_attention' or getattr(model, 'model_type', None) != mode:
+        raise ValueError('Use FeatureTemporalAttentionLSTMAutoencoder and mode="TF_attention"')
 
-    L_A = mean((reconstruction_A - X_A)**2), over batch, time and features.
-    L_B is defined identically; optimization loss = (L_A + L_B) / 2.
-    Both forward calls use the SAME model and therefore share all weights.
-    Epoch curves retain the original arithmetic mean of batch losses.
-
-    Reliability differences confined to this new file: clone the best state
-    (state_dict alone is a live view), save it immediately for Colab persistence,
-    guard empty loaders/nonfinite losses, and allow a bare checkpoint filename.
-    These .pth files are model weights, not optimizer/RNG states: loading them
-    warm-starts training; it does not resume an interrupted epoch exactly.
-    """
-    if mode != 'temporal_attention' or getattr(model, 'model_type', None) != mode:
-        raise ValueError('Use TemporalAttentionLSTMAutoencoder and mode="temporal_attention"')
     if num_epochs < 1 or len(train_data_loader) == 0 or len(val_data_loader) == 0:
         raise ValueError('Positive num_epochs and nonempty train/validation loaders required')
     device = device or torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -81,7 +72,7 @@ def train_attention_lstm_ae_mode(
             optimizer.step()
             train_loss += loss.item()
         train_losses.append(train_loss / len(train_data_loader))
-        scheduler.step()
+        # scheduler.step()
 
         model.eval()
         val_loss = 0.0
