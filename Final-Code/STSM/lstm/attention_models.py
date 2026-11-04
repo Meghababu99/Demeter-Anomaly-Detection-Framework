@@ -10,11 +10,9 @@ This is scalar temporal pooling, not multi-head self-attention, feature
 attention, decoder cross-attention, a VAE, or a classifier.
 The original decoder is reused without modifying models.py.
 """
-
 import torch
 import torch.nn as nn
 from .models import LSTMDecoder
-
 
 class TemporalAttentionLSTMEncoder(nn.Module):
     def __init__(self, input_size, hidden_size, num_layers, latent_dim):
