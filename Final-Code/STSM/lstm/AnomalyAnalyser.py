@@ -6,21 +6,7 @@ from PIL import Image
 
 class SeismicAnomalyAnalyzer:
     def __init__(self, dataset, eq,is_eq_func, percentiles,threshold_value,num_features,filename_suffix, create_half_orbit_sequences_func, output_dir="output",m='Model_number'):
-        """
-        Initializes the SeismicAnomalyAnalyzer.
-
-        Args:
-            is_eq_func (callable): Function that checks if a time/location matches a seismic event.
-            create_half_orbit_sequences_func (callable): Function that returns sequences from the dataset.
-            output_dir (str): Path where plots and summaries will be saved.
-             percentiles (List[int]): Percentile bins (e.g., [0, 20, 40, 60, 80, 100]).
-            dataset (Any): Dataset from which sequences will be generated.
-            eq (Any): Earthquake catalog.
-            filename_suffix (str): Suffix for output file naming.
-            time_window (float): Time window (in days) to consider as matching a seismic event.
-            spatial_window (float): Spatial window (in km) for seismic proximity.
-            threshold_value (float): Value (in %) to mark as a threshold on the bar plot.
-        """
+    
         self.dataset=dataset
         self.percentiles=percentiles
         # self.time_window=time_window
@@ -36,14 +22,7 @@ class SeismicAnomalyAnalyzer:
         os.makedirs(self.output_dir, exist_ok=True)
 
     def plot_aggregate_error_analysis(self, error_values):
-        """
-        Analyzes a single vector of anomaly scores (e.g., total reconstruction errors) 
-        and evaluates the seismic ratio per percentile bin.
 
-        Args:
-            error_values (np.ndarray): 1D array of anomaly scores.
-           
-        """
         test_sequences, test_datetime_sequences, lat_long_sequences, _ = self.create_half_orbit_sequences(self.dataset)
 
         anoms_train_lim = [(p, np.percentile(error_values, p)) for p in self.percentiles]
@@ -82,20 +61,7 @@ class SeismicAnomalyAnalyzer:
         )
 
     def plot_feature_error_analysis(self, error_matrix):
-        """
-        Evaluates the seismic anomaly ratio for each feature independently.
-
-        Args:
-            error_matrix (np.ndarray): 2D array of reconstruction errors (rows = sequences, cols = features).
-            percentiles (List[int]): Percentile thresholds for binning.
-            dataset (Any): Dataset to analyze.
-            eq (Any): Earthquake catalog.
-            num_features (int): Number of features (columns) in the matrix.
-            filename_suffix (str): Suffix for saving output plots.
-            time_window (float): Time window (in days) for checking proximity to earthquakes.
-            spatial_window (float): Spatial range (in km) to consider.
-            threshold_value (float): Reference line in plots as a % of max value.
-        """
+    
         test_sequences, test_datetime_sequences, lat_long_sequences, _ = self.create_half_orbit_sequences(self.dataset)
 
         for feature_idx in range(self.num_features):

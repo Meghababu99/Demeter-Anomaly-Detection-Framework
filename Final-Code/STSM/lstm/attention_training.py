@@ -1,11 +1,4 @@
-"""Paired temporal-attention AE training, following training_modes.py.
 
-Retains Adam, paired mean MSE, validation, early stopping, per-epoch weights,
-loss plotting and the (model, train_losses, val_losses) return convention.
-No classifier/BCE/KL/attention supervision is added: attention learns through
-backpropagation of the same reconstruction loss as the original AE.
-Existing training modules are not imported or changed.
-"""
 
 from copy import deepcopy
 import os

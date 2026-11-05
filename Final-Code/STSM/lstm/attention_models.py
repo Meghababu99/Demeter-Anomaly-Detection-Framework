@@ -1,15 +1,4 @@
-"""Temporal attention LSTM autoencoder (new STSM experiment only).
 
-Only the encoder summary changes relative to models.LSTMAutoencoder:
-    original: final top-layer hidden state -> Linear(H, LD)
-    temporal_attention: all top-layer hidden states -> Linear(H, 1)
-        -> softmax over time -> weighted sum -> Linear(H, LD)
-
-Global means that all T encoder outputs contribute to one context vector.
-This is scalar temporal pooling, not multi-head self-attention, feature
-attention, decoder cross-attention, a VAE, or a classifier.
-The original decoder is reused without modifying models.py.
-"""
 import torch
 import torch.nn as nn
 from .models import LSTMDecoder
